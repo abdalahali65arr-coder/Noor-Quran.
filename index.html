@@ -123,6 +123,12 @@ function startAutoFilScenes(){
 }
 function previousFilScene(){updateFilStory(filStoryIndex-1)}
 function nextFilScene(){updateFilStory(filStoryIndex+1)}
+function syncFilSceneToAudio(){
+ const audio=document.getElementById('surahAudio');
+ if(current!==105||!audio||!isFinite(audio.duration)||audio.duration<=0)return;
+ const i=Math.min(4,Math.floor((audio.currentTime/audio.duration)*5));
+ if(i!==filStoryIndex)updateFilStory(i);
+}
 function startFilStory(){
  if(filAutoTimer)clearInterval(filAutoTimer);
  filAutoTimer=null;
@@ -131,14 +137,17 @@ function startFilStory(){
  if(!audio.src){document.getElementById('audioStatus').textContent='جهّز التلاوة أولًا ثم ابدأ المشاهد.';return}
  audio.play().catch(()=>{document.getElementById('audioStatus').textContent='اضغط تشغيل التلاوة من مشغل الصوت، ثم ابدأ المشاهد.'});
  if(filStoryTimer)clearInterval(filStoryTimer);
- filStoryTimer=setInterval(()=>{
-  const duration=audio.duration;
-  if(duration&&isFinite(duration)&&duration>0&&!audio.paused){
-   updateFilStory(Math.min(4,Math.floor((audio.currentTime/duration)*5)));
-  }
- },500);
+ audio.removeEventListener('timeupdate',syncFilSceneToAudio);
+ audio.addEventListener('timeupdate',syncFilSceneToAudio);
+ audio.addEventListener('seeked',syncFilSceneToAudio);
+ syncFilSceneToAudio();
 }
 function stopFilStory(){
+ const audio=document.getElementById('surahAudio');
+ if(audio){
+  audio.removeEventListener('timeupdate',syncFilSceneToAudio);
+  audio.removeEventListener('seeked',syncFilSceneToAudio);
+ }
  if(filStoryTimer)clearInterval(filStoryTimer);
  if(filAutoTimer)clearInterval(filAutoTimer);
  filStoryTimer=null;filAutoTimer=null;
