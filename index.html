@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#103c32">
+<title>نور | القرآن الكريم</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#071b19;color:#fff;font-family:Arial,sans-serif;padding-bottom:80px}
+header{padding:24px 18px;background:#103c32;border-radius:0 0 24px 24px}
+.logo{font-size:30px;font-weight:bold;color:#e4c887}
+header p{color:#d4e4dc}
+.search{width:100%;padding:14px;border:0;border-radius:12px;margin-top:12px;font-size:16px}
+.container{padding:18px}
+h2{color:#e4c887}
+.hero{background:linear-gradient(135deg,#185b49,#102b28);padding:22px;border-radius:20px;margin-top:15px;border:1px solid #b99a5b}
+button{border:0;border-radius:12px;padding:12px 16px;background:#d5b66e;color:#142b23;font-weight:bold;font-size:15px}
+.card{background:#12332e;padding:15px;border-radius:16px;margin:11px 0;border:1px solid #285448}
+.surah{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.number{background:#d5b66e;color:#142b23;padding:9px;border-radius:9px}
+.tabs{display:flex;gap:8px;margin:15px 0}
+.tabs button{flex:1;padding:11px 5px}
+.media{background:#0a2420;border-radius:15px;padding:25px 12px;text-align:center;border:1px dashed #d5b66e}
+.bottom{position:fixed;bottom:0;left:0;width:100%;background:#10352e;display:flex;justify-content:space-around;padding:15px 5px}
+.bottom a{color:#fff;text-decoration:none;font-size:13px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">☾ نور</div>
+<p>رحلتك اليومية مع القرآن الكريم</p>
+<input class="search" id="search" placeholder="ابحث عن سورة..." oninput="searchSurah()">
+</header>
+<div class="container">
+<div class="hero">
+<h1>السلام عليكم 🌙</h1>
+<p>اجعل القرآن نور قلبك وحياتك</p>
+<h2>﴿ وَهُوَ مَعَكُمْ أَيْنَ مَا كُنْتُمْ ﴾</h2>
+<button onclick="showSection('quran')">ابدأ القراءة</button>
+</div>
+<h2>استكشف القرآن</h2>
+<div class="tabs">
+<button onclick="showSection('quran')">السور</button>
+<button onclick="showSection('video')">الفيديوهات</button>
+<button onclick="showSection('audio')">الصوتيات</button>
+</div>
+<section id="quran"><div id="surahs"></div></section>
+<section id="video" class="hidden">
+<div class="card"><h2>🎬 فيديوهات القرآن</h2><div class="media"><h1>▶</h1><p>سيتم إضافة الفيديوهات عند تجهيز المحتوى</p></div></div>
+</section>
+<section id="audio" class="hidden">
+<div class="card"><h2>🎧 القرآن والصوتيات</h2><div class="media"><h1>♫</h1><p>سيتم ربط التلاوات والشروحات الصوتية لاحقاً</p></div></div>
+</section>
+</div>
+<nav class="bottom">
+<a href="#" onclick="showSection('quran')">📖 القرآن</a>
+<a href="#" onclick="showSection('video')">🎬 فيديو</a>
+<a href="#" onclick="showSection('audio')">🎧 صوتيات</a>
+</nav>
+<script>
+const names=["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+function render(list){document.getElementById("surahs").innerHTML=list.map(name=>{let n=names.indexOf(name)+1;return `<div class="card surah"><span><span class="number">${n}</span>　${name}</span><button onclick="alert('سيتم تجهيز صفحة السورة والتلاوة في المرحلة القادمة')">افتح</button></div>`}).join("")}
+function searchSurah(){let q=document.getElementById("search").value.trim();render(names.filter(n=>n.includes(q)))}
+function showSection(id){["quran","video","audio"].forEach(s=>document.getElementById(s).classList.toggle("hidden",s!==id))}
+render(names);
+</script>
+</body>
+</html>
