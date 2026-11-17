@@ -94,7 +94,7 @@ const filExplanations=[
 "كانت الطير ترميهم بحجارة من طين متحجر، كما أخبر القرآن.",
 "فصاروا كزرع يابس مهشم أكلته الدواب؛ وفي ذلك بيان قدرة الله وحفظه لبيته."
 ];
-let filStoryTimer=null,filStoryIndex=0;
+let filStoryTimer=null,filAutoTimer=null,filStoryIndex=0;
 const filSceneArt=[
  '<g fill="#62594b" stroke="#403a32" stroke-width="3"><path d="M95 192 L90 140 Q95 105 132 105 Q169 108 174 145 L166 192Z"/><path d="M155 128 Q190 102 205 127 L194 147 L166 146Z"/><path d="M194 130 L216 134 L209 142 L194 140Z"/><path d="M110 190v30 M151 190v30" stroke-width="7" fill="none"/><path d="M250 194 L245 155 Q250 126 282 126 Q313 128 318 158 L310 194Z"/><path d="M302 145 Q326 126 340 146 L329 162 L310 160Z"/></g><g fill="#8b795c"><path d="M30 210h540v9H30z"/><path d="M45 210l8-38 8 38M390 210l8-38 8 38"/></g><text x="300" y="32" text-anchor="middle" fill="#173b39" font-size="17">جيش أصحاب الفيل يتجه نحو مكة</text>',
  '<g fill="#62594b" stroke="#403a32" stroke-width="3"><path d="M105 192 L100 145 Q105 112 140 112 Q175 114 180 148 L173 192Z"/><path d="M164 133 Q197 110 211 132 L200 151 L176 150Z"/><path d="M255 194 L250 155 Q255 126 286 126 Q317 128 322 158 L314 194Z"/></g><g stroke="#e8dfc7" stroke-width="5" fill="none" stroke-linecap="round"><path d="M65 80q25-25 50 0M510 78q-25-25-50 0"/></g><path d="M35 225q110-25 220 0t220 0" fill="none" stroke="#806a4a" stroke-width="9"/><text x="300" y="32" text-anchor="middle" fill="#173b39" font-size="17">خاب تدبيرهم وردّ الله كيدهم</text>',
@@ -115,9 +115,17 @@ function updateFilStory(i){
  const progress=document.getElementById('storyProgress');
  if(progress)progress.textContent='المشهد '+(filStoryIndex+1)+' من 5 — الآية '+(filStoryIndex+1);
 }
+function startAutoFilScenes(){
+ if(filAutoTimer)clearInterval(filAutoTimer);
+ filAutoTimer=setInterval(()=>{
+  if(!filStoryTimer)updateFilStory((filStoryIndex+1)%5);
+ },5000);
+}
 function previousFilScene(){updateFilStory(filStoryIndex-1)}
 function nextFilScene(){updateFilStory(filStoryIndex+1)}
 function startFilStory(){
+ if(filAutoTimer)clearInterval(filAutoTimer);
+ filAutoTimer=null;
  const audio=document.getElementById('surahAudio');
  document.getElementById('storyPlay').textContent='▶ المشاهد متزامنة مع التلاوة';
  if(!audio.src){document.getElementById('audioStatus').textContent='جهّز التلاوة أولًا ثم ابدأ المشاهد.';return}
@@ -132,12 +140,13 @@ function startFilStory(){
 }
 function stopFilStory(){
  if(filStoryTimer)clearInterval(filStoryTimer);
- filStoryTimer=null;
+ if(filAutoTimer)clearInterval(filAutoTimer);
+ filStoryTimer=null;filAutoTimer=null;
  document.getElementById('storyPlay').textContent='▶ ابدأ المشاهد مع التلاوة';
 }
 
 function renderSurahs(){const q=document.getElementById('search').value.trim();document.getElementById('surahs').innerHTML=names.map((n,i)=>({n,i})).filter(x=>x.n.includes(q)).map(x=>'<div class="surah"><span><span class="num">'+(x.i+1)+'</span>　'+x.n+'</span><span class="actions"><button onclick="loadSurah('+(x.i+1)+')">اقرأ</button><button class="secondary" aria-label="إضافة للمفضلة" onclick="toggleFav('+(x.i+1)+')">☆</button></span></div>').join('')||'<p class="muted">لا توجد نتائج</p>'}
-async function loadSurah(n){current=n;section('reader');document.getElementById('storyPanel').classList.toggle('hidden',n!==105);stopFilStory();document.getElementById('surahTitle').textContent='سورة '+names[n-1];document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';document.getElementById('verses').innerHTML='';try{const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');if(!res.ok)throw Error('network');const json=await res.json();if(json.code!==200)throw Error('api');currentAyahs=json.data.ayahs;if(n===105)updateFilStory(0);document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';playSurahAudio(n);document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');localStorage.setItem('noor-last',String(n))}catch(e){document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}}
+async function loadSurah(n){current=n;section('reader');document.getElementById('storyPanel').classList.toggle('hidden',n!==105);stopFilStory();document.getElementById('surahTitle').textContent='سورة '+names[n-1];document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';document.getElementById('verses').innerHTML='';try{const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');if(!res.ok)throw Error('network');const json=await res.json();if(json.code!==200)throw Error('api');currentAyahs=json.data.ayahs;if(n===105){updateFilStory(0);startAutoFilScenes();}document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';playSurahAudio(n);document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');localStorage.setItem('noor-last',String(n))}catch(e){document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}}
 function toggleFav(n){let f=getStore('noor-favs');f=f.includes(n)?f.filter(x=>x!==n):[...f,n];localStorage.setItem('noor-favs',JSON.stringify(f));renderSurahs();renderSaved()}
 function bookmarkAyah(s,a){let b=getStore('noor-bookmarks');if(!b.some(x=>x.s===s&&x.a===a))b.push({s,a});localStorage.setItem('noor-bookmarks',JSON.stringify(b));alert('تم حفظ الآية في هذا الجهاز')}
 function renderSaved(){let f=getStore('noor-favs'),b=getStore('noor-bookmarks');document.getElementById('favorites').innerHTML=f.length?f.map(n=>'<div class="surah"><span>'+n+' — '+names[n-1]+'</span><button onclick="loadSurah('+n+')">افتح</button></div>').join(''):'<p class="muted">لم تضف سورًا للمفضلة بعد.</p>';document.getElementById('bookmarks').innerHTML=b.length?b.map(x=>'<div class="surah"><span>'+names[x.s-1]+' — الآية '+x.a+'</span><button onclick="openBookmark('+x.s+','+x.a+')">افتح</button></div>').join(''):'<p class="muted">لا توجد آيات محفوظة بعد.</p>'}
