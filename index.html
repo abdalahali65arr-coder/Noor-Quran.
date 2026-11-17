@@ -7,7 +7,7 @@
 <title>نور | القرآن الكريم</title>
 <style>
 :root{--bg:#071b19;--panel:#12332e;--gold:#d9bb78;--muted:#b8cbc2;--line:#285448}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Tahoma,Arial,sans-serif;padding-bottom:84px}header{background:#103c32;padding:20px 16px 18px;border-radius:0 0 24px 24px}.logo{font-size:30px;color:var(--gold);font-weight:bold}header p{color:#d4e4dc;margin:7px 0 12px}.wrap{padding:14px;max-width:850px;margin:auto}.hero,.panel,.surah,.verse,.feature{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin:11px 0}.hero{background:linear-gradient(135deg,#185b49,#102b28);border-color:var(--gold)}h2{color:var(--gold);font-size:20px}button,input{font:inherit}button{border:0;border-radius:11px;padding:11px 13px;background:var(--gold);color:#142b23;font-weight:bold;cursor:pointer}button.secondary{background:#244b40;color:white;border:1px solid #527466}button:disabled{opacity:.5}input{width:100%;padding:13px;border:0;border-radius:11px;margin-top:8px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tabs button{flex:1;min-width:90px}.surah{display:flex;justify-content:space-between;align-items:center;gap:9px}.num{color:var(--gold);border:1px solid var(--gold);border-radius:9px;padding:6px 9px}.hidden{display:none!important}.muted,.status{color:var(--muted);font-size:14px;line-height:1.8}.verse{font-size:22px;line-height:2.1;text-align:justify}.verse small{display:block;color:var(--gold);font-size:13px}.verse-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.bottom{position:fixed;bottom:0;left:0;right:0;background:#10352e;display:flex;justify-content:space-around;padding:10px 3px;z-index:5}.bottom button{background:transparent;color:white;padding:8px;font-size:13px}.pill{display:inline-block;border:1px solid #527466;border-radius:30px;padding:5px 10px;color:var(--muted);font-size:12px}.feature{line-height:1.9}.gold{color:var(--gold)}.audio{width:100%;margin-top:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}@media(max-width:420px){.grid{grid-template-columns:1fr}.surah{align-items:flex-start}.surah .actions{margin:0}}
-</style>
+.story-panel{background:#0b2426;border:1px solid #b99a58;border-radius:18px;padding:12px;margin:14px 0;overflow:hidden}.story-stage{position:relative;min-height:230px;border-radius:14px;overflow:hidden;background:linear-gradient(#78b9d0 0%,#d8c99b 68%,#8a7550 69%,#5a4936 100%)}.story-stage svg{display:block;width:100%;height:230px}.story-caption{padding:12px 5px 3px;line-height:1.9}.story-caption strong{color:var(--gold)}.story-caption p{margin:5px 0;color:#e7eee8}.story-note{font-size:12px;color:#b8cbc2}.story-bird{animation:birdfly 5s linear infinite}.story-bird:nth-of-type(2){animation-delay:-1.5s}.story-bird:nth-of-type(3){animation-delay:-3s}@keyframes birdfly{0%{transform:translate(-150px,35px)}50%{transform:translate(70px,-12px)}100%{transform:translate(310px,25px)}}.story-stone{animation:stonefall 2.4s ease-in infinite;transform-origin:center}.story-stone:nth-of-type(2){animation-delay:.7s}.story-stone:nth-of-type(3){animation-delay:1.4s}@keyframes stonefall{0%{transform:translateY(-35px);opacity:0}20%{opacity:1}100%{transform:translateY(105px);opacity:0}}</style>
 </head>
 <body>
 <header><div class="logo">☾ نور</div><p>رفيقك اليومي مع القرآن الكريم</p><input id="search" placeholder="ابحث عن سورة..." oninput="renderSurahs()" aria-label="البحث عن سورة"></header>
@@ -23,7 +23,23 @@
 <div class="actions"><button class="secondary" onclick="section('quran')">رجوع للسور</button><button class="secondary" onclick="saveLast()">حفظ موضع القراءة</button></div>
 <h2 id="surahTitle"></h2><p id="readerStatus" class="status">جارٍ تحميل الآيات...</p>
 <div id="audioPanel" class="panel"><strong class="gold">التلاوة الصوتية — الشيخ محمد اللحيدان</strong><p id="audioStatus" class="muted">جارٍ تجهيز التلاوة...</p><audio id="surahAudio" class="audio" controls preload="none"></audio></div>
-<div id="verses"></div>
+<div id="storyPanel" class="story-panel hidden">
+ <div class="row" style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><strong class="gold">🎬 مشاهد سورة الفيل</strong><span class="pill">نموذج بصري توضيحي</span></div>
+ <div class="story-stage" role="img" aria-label="مشهد توضيحي لطيور أبابيل وحجارة من سجيل">
+  <svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg">
+   <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#72b4ce"/><stop offset="1" stop-color="#ead7a5"/></linearGradient></defs>
+   <rect width="600" height="260" fill="url(#sky)"/><circle cx="500" cy="48" r="25" fill="#fff0bd" opacity=".85"/>
+   <path d="M0 198 Q130 170 250 202 T600 190 V260 H0Z" fill="#806a4a"/><path d="M0 224 Q170 205 330 226 T600 215 V260 H0Z" fill="#554936"/>
+   <g fill="#6a6255" stroke="#403c36" stroke-width="3"><path d="M95 190 L90 139 Q95 110 130 110 Q164 112 170 143 L163 190Z"/><path d="M155 127 Q190 104 203 127 L194 146 L166 145Z"/><path d="M194 130 L212 133 L208 140 L194 140Z"/><path d="M110 188 L108 218 M150 188 L152 218" stroke-width="7" fill="none"/><path d="M230 196 L225 154 Q230 128 261 128 Q291 130 296 158 L289 196Z"/><path d="M282 146 Q306 126 319 146 L308 162 L289 160Z"/><path d="M308 148 L326 151 L321 157 L308 157Z"/><path d="M245 195 L243 220 M280 195 L282 220" stroke-width="7" fill="none"/></g>
+   <g fill="#243c3a" class="story-bird"><path d="M0 0 Q13 -12 25 0 Q37 -12 50 0 Q37 -5 25 8 Q13 -5 0 0Z"/></g>
+   <g fill="#243c3a" class="story-bird"><path d="M0 0 Q13 -12 25 0 Q37 -12 50 0 Q37 -5 25 8 Q13 -5 0 0Z"/></g>
+   <g fill="#243c3a" class="story-bird"><path d="M0 0 Q13 -12 25 0 Q37 -12 50 0 Q37 -5 25 8 Q13 -5 0 0Z"/></g>
+   <g fill="#b69b70" stroke="#69573d" stroke-width="1"><ellipse class="story-stone" cx="365" cy="100" rx="5" ry="8"/><ellipse class="story-stone" cx="405" cy="116" rx="5" ry="8"/><ellipse class="story-stone" cx="445" cy="94" rx="5" ry="8"/></g>
+   <text x="300" y="30" fill="#173b39" font-size="15" text-anchor="middle">مشهد رمزي يوضح أحداث السورة</text>
+  </svg>
+ </div>
+ <div class="story-caption"><strong id="storyVerse">﴿ أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ﴾</strong><p id="storyExplanation">يعرض المشهد بداية قصة أصحاب الفيل، كما وردت في السورة.</p><div class="actions"><button id="storyPlay" onclick="startFilStory()">▶ ابدأ المشاهد مع التلاوة</button><button class="secondary" onclick="stopFilStory()">إيقاف المشاهد</button></div><div class="story-note">المشهد رسم توضيحي مبسط وليس تصويرًا تاريخيًا حرفيًا. نص الآيات والتفسير يُعرضان باحترام ومن مصادر موثوقة.</div></div>
+</div>\n<div id="verses"></div>
 </section>
 <section id="tadabbur" class="hidden"><h2>التدبر والمعاني</h2>
 <div class="feature"><strong class="gold">تدبر بتأنٍ</strong><p>اقرأ الآية، وتأمل معناها، وارجع إلى كتب التفسير المعتمدة. هذه النسخة لا تنشئ تفسيرًا آليًا ولا تنسب معنى إلى القرآن دون مصدر.</p></div>
@@ -74,8 +90,42 @@ async function loadVideos(){
   list.innerHTML=items.map(v=>'<article class="panel"><strong class="gold">'+String(v.reciter).replace(/[<>&"]/g,'')+'</strong><video controls playsinline preload="none" style="width:100%;margin-top:10px;border-radius:12px" '+(v.video_thumb_url?'poster="'+String(v.video_thumb_url).replace(/"/g,'')+'"':'')+'><source src="'+String(v.video_url).replace(/"/g,'')+'" type="video/mp4">متصفحك لا يدعم تشغيل الفيديو.</video></article>').join('');
  }catch(e){status.textContent='تعذر تحميل الفيديوهات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}
 }
-function renderSurahs(){const q=document.getElementById('search').value.trim();document.getElementById('surahs').innerHTML=names.map((n,i)=>({n,i})).filter(x=>x.n.includes(q)).map(x=>'<div class="surah"><span><span class="num">'+(x.i+1)+'</span>　'+x.n+'</span><span class="actions"><button onclick="loadSurah('+(x.i+1)+')">اقرأ</button><button class="secondary" aria-label="إضافة للمفضلة" onclick="toggleFav('+(x.i+1)+')">☆</button></span></div>').join('')||'<p class="muted">لا توجد نتائج</p>'}
-async function loadSurah(n){current=n;section('reader');document.getElementById('surahTitle').textContent='سورة '+names[n-1];document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';document.getElementById('verses').innerHTML='';try{const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');if(!res.ok)throw Error('network');const json=await res.json();if(json.code!==200)throw Error('api');currentAyahs=json.data.ayahs;document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';playSurahAudio(n);document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');localStorage.setItem('noor-last',String(n))}catch(e){document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}}
+
+const filExplanations=[
+"تبدأ السورة بتذكير النبي ﷺ بما صنعه الله بأصحاب الفيل الذين قصدوا البيت الحرام.",
+"جعل الله تدبيرهم في ضلال وخسران، فلم يحققوا ما أرادوا.",
+"أرسل الله عليهم جماعات من طير تأتي متتابعة.",
+"كانت الطير ترميهم بحجارة من طين متحجر، كما أخبر القرآن.",
+"فصاروا كزرع يابس مهشم أكلته الدواب؛ وفي ذلك بيان قدرة الله وحفظه لبيته."
+];
+let filStoryTimer=null,filStoryIndex=0;
+function updateFilStory(i){
+ filStoryIndex=Math.max(0,Math.min(4,i));
+ const a=currentAyahs[filStoryIndex];
+ if(a)document.getElementById('storyVerse').textContent='﴿ '+a.text+' ﴾';
+ document.getElementById('storyExplanation').textContent=filExplanations[filStoryIndex];
+}
+function startFilStory(){
+ const audio=document.getElementById('surahAudio');
+ document.getElementById('storyPlay').textContent='▶ المشاهد تعمل مع التلاوة';
+ if(audio.src){audio.play().catch(()=>{});}
+ if(filStoryTimer)clearInterval(filStoryTimer);
+ filStoryTimer=setInterval(()=>{
+  const duration=audio.duration;
+  if(duration&&isFinite(duration)&&duration>0&& !audio.paused){
+   updateFilStory(Math.min(4,Math.floor((audio.currentTime/duration)*5)));
+  }else if(!audio.src||audio.paused){
+   updateFilStory((filStoryIndex+1)%5);
+  }
+ },1800);
+}
+function stopFilStory(){
+ if(filStoryTimer)clearInterval(filStoryTimer);
+ filStoryTimer=null;
+ document.getElementById('storyPlay').textContent='▶ ابدأ المشاهد مع التلاوة';
+}
+\nfunction renderSurahs(){const q=document.getElementById('search').value.trim();document.getElementById('surahs').innerHTML=names.map((n,i)=>({n,i})).filter(x=>x.n.includes(q)).map(x=>'<div class="surah"><span><span class="num">'+(x.i+1)+'</span>　'+x.n+'</span><span class="actions"><button onclick="loadSurah('+(x.i+1)+')">اقرأ</button><button class="secondary" aria-label="إضافة للمفضلة" onclick="toggleFav('+(x.i+1)+')">☆</button></span></div>').join('')||'<p class="muted">لا توجد نتائج</p>'}
+async function loadSurah(n){current=n;section('reader');document.getElementById('storyPanel').classList.toggle('hidden',n!==105);stopFilStory();document.getElementById('surahTitle').textContent='سورة '+names[n-1];document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';document.getElementById('verses').innerHTML='';try{const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');if(!res.ok)throw Error('network');const json=await res.json();if(json.code!==200)throw Error('api');currentAyahs=json.data.ayahs;document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';playSurahAudio(n);document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');localStorage.setItem('noor-last',String(n))}catch(e){document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}}
 function toggleFav(n){let f=getStore('noor-favs');f=f.includes(n)?f.filter(x=>x!==n):[...f,n];localStorage.setItem('noor-favs',JSON.stringify(f));renderSurahs();renderSaved()}
 function bookmarkAyah(s,a){let b=getStore('noor-bookmarks');if(!b.some(x=>x.s===s&&x.a===a))b.push({s,a});localStorage.setItem('noor-bookmarks',JSON.stringify(b));alert('تم حفظ الآية في هذا الجهاز')}
 function renderSaved(){let f=getStore('noor-favs'),b=getStore('noor-bookmarks');document.getElementById('favorites').innerHTML=f.length?f.map(n=>'<div class="surah"><span>'+n+' — '+names[n-1]+'</span><button onclick="loadSurah('+n+')">افتح</button></div>').join(''):'<p class="muted">لم تضف سورًا للمفضلة بعد.</p>';document.getElementById('bookmarks').innerHTML=b.length?b.map(x=>'<div class="surah"><span>'+names[x.s-1]+' — الآية '+x.a+'</span><button onclick="openBookmark('+x.s+','+x.a+')">افتح</button></div>').join(''):'<p class="muted">لا توجد آيات محفوظة بعد.</p>'}
