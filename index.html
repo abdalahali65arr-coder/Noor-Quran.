@@ -17,18 +17,19 @@
 <div class="feature"><span class="gold">📖 القراءة</span><div class="muted">تصفح سور القرآن الكريم واقرأ الآيات بالرسم العثماني.</div></div>
 <div class="feature"><span class="gold">⭐ محفوظاتك</span><div class="muted">احتفظ بالسور والآيات التي تريد الرجوع إليها.</div></div>
 </div>
-<div class="tabs"><button onclick="section('quran')">📖 القرآن</button><button onclick="section('tadabbur')">🌿 التدبر</button><button onclick="section('saved')">⭐ المحفوظات</button></div>
+<div class="tabs"><button onclick="section('quran')">📖 القرآن</button><button onclick="section('tadabbur')">🌿 التدبر</button><button onclick="section('saved')">⭐ المحفوظات</button><button onclick="section('videos')">🎬 فيديوهات</button></div>
 <section id="quran"><h2>سور القرآن الكريم <span class="pill">114 سورة</span></h2><div id="surahs"><p class="status">جارٍ تجهيز القائمة...</p></div></section>
 <section id="reader" class="hidden">
 <div class="actions"><button class="secondary" onclick="section('quran')">رجوع للسور</button><button class="secondary" onclick="saveLast()">حفظ موضع القراءة</button></div>
 <h2 id="surahTitle"></h2><p id="readerStatus" class="status">جارٍ تحميل الآيات...</p>
-<div id="audioPanel" class="panel"><strong class="gold">التلاوة الصوتية</strong><p class="muted">سيُضاف صوت الشيخ محمد اللحيدان بعد اعتماد مصدر تسجيلات مصرح باستخدامها. لا نستخدم تسجيلات مجهولة الحقوق.</p></div>
+<div id="audioPanel" class="panel"><strong class="gold">التلاوة الصوتية — الشيخ محمد اللحيدان</strong><p id="audioStatus" class="muted">جارٍ تجهيز التلاوة...</p><audio id="surahAudio" class="audio" controls preload="none"></audio></div>
 <div id="verses"></div>
 </section>
 <section id="tadabbur" class="hidden"><h2>التدبر والمعاني</h2>
 <div class="feature"><strong class="gold">تدبر بتأنٍ</strong><p>اقرأ الآية، وتأمل معناها، وارجع إلى كتب التفسير المعتمدة. هذه النسخة لا تنشئ تفسيرًا آليًا ولا تنسب معنى إلى القرآن دون مصدر.</p></div>
 <div class="feature"><strong class="gold">الفيديوهات التوضيحية</strong><p>قسم الفيديوهات مخصص لمقاطع قصيرة تجمع بين الآية والشرح والمشاهد البصرية المناسبة. لن نعرض فيديوهات تجريبية أو مشاهد غير مراجعة على أنها محتوى ديني موثوق.</p><span class="pill">المحتوى المرئي قيد الإعداد</span></div>
 </section>
+<section id="videos" class="hidden"><h2>🎬 فيديوهات إيمانية</h2><p id="videoStatus" class="status">جارٍ تحميل الفيديوهات...</p><div id="videoList"></div></section>
 <section id="saved" class="hidden"><h2>المحفوظات</h2><h3 class="gold">السور المفضلة</h3><div id="favorites"></div><h3 class="gold">الآيات المحفوظة</h3><div id="bookmarks"></div></section>
 <section id="daily" class="hidden"><h2>آية للتأمل</h2><div id="dailyContent" class="panel">جارٍ التحميل...</div><button class="secondary" onclick="section('quran')">العودة للقرآن</button></section>
 </main>
@@ -37,9 +38,44 @@
 const names=["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 let current=0, currentAyahs=[];
 const getStore=(k)=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}};
-function section(id){['quran','reader','tadabbur','saved','daily'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));if(id==='saved')renderSaved()}
+function section(id){['quran','reader','tadabbur','saved','daily','videos'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));if(id==='saved')renderSaved()}
+
+let lohaidanServer='';
+async function setupAudio(){
+ const status=document.getElementById('audioStatus');
+ try{
+  const r=await fetch('https://mp3quran.net/api/v3/reciters?language=ar');
+  if(!r.ok)throw Error('api');
+  const j=await r.json();
+  const rec=(j.reciters||[]).find(x=>(x.name||'').includes('محمد اللحيدان'));
+  const read=rec&&(rec.moshaf||[]).find(x=>x.server);
+  if(!read)throw Error('missing');
+  lohaidanServer=read.server.endsWith('/')?read.server:read.server+'/';
+  status.textContent='جاهز للاستماع بصوت الشيخ محمد اللحيدان.';
+  if(current)playSurahAudio(current);
+ }catch(e){status.textContent='تعذر الوصول لمصدر التلاوة حاليًا. حاول مرة أخرى بعد قليل.'}
+}
+function playSurahAudio(n){
+ const audio=document.getElementById('surahAudio');
+ if(!lohaidanServer){setupAudio();return}
+ audio.src=lohaidanServer+String(n).padStart(3,'0')+'.mp3';
+ audio.load();
+ document.getElementById('audioStatus').textContent='تلاوة سورة '+names[n-1]+' بصوت الشيخ محمد اللحيدان.';
+}
+async function loadVideos(){
+ const status=document.getElementById('videoStatus'),list=document.getElementById('videoList');
+ try{
+  const r=await fetch('https://mp3quran.net/api/v3/videos?language=ar');
+  if(!r.ok)throw Error('api');
+  const j=await r.json();
+  const items=(j.videos||[]).flatMap(group=>(group.videos||[]).map(v=>({...v,reciter:group.reciter_name||'محتوى قرآني'}))).filter(v=>v.video_url);
+  if(!items.length){status.textContent='لا توجد فيديوهات متاحة حاليًا.';return}
+  status.textContent='مقاطع مرئية من مكتبة MP3Quran.';
+  list.innerHTML=items.map(v=>'<article class="panel"><strong class="gold">'+String(v.reciter).replace(/[<>&"]/g,'')+'</strong><video controls playsinline preload="none" style="width:100%;margin-top:10px;border-radius:12px" '+(v.video_thumb_url?'poster="'+String(v.video_thumb_url).replace(/"/g,'')+'"':'')+'><source src="'+String(v.video_url).replace(/"/g,'')+'" type="video/mp4">متصفحك لا يدعم تشغيل الفيديو.</video></article>').join('');
+ }catch(e){status.textContent='تعذر تحميل الفيديوهات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}
+}
 function renderSurahs(){const q=document.getElementById('search').value.trim();document.getElementById('surahs').innerHTML=names.map((n,i)=>({n,i})).filter(x=>x.n.includes(q)).map(x=>'<div class="surah"><span><span class="num">'+(x.i+1)+'</span>　'+x.n+'</span><span class="actions"><button onclick="loadSurah('+(x.i+1)+')">اقرأ</button><button class="secondary" aria-label="إضافة للمفضلة" onclick="toggleFav('+(x.i+1)+')">☆</button></span></div>').join('')||'<p class="muted">لا توجد نتائج</p>'}
-async function loadSurah(n){current=n;section('reader');document.getElementById('surahTitle').textContent='سورة '+names[n-1];document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';document.getElementById('verses').innerHTML='';try{const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');if(!res.ok)throw Error('network');const json=await res.json();if(json.code!==200)throw Error('api');currentAyahs=json.data.ayahs;document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');localStorage.setItem('noor-last',String(n))}catch(e){document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}}
+async function loadSurah(n){current=n;section('reader');document.getElementById('surahTitle').textContent='سورة '+names[n-1];document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';document.getElementById('verses').innerHTML='';try{const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');if(!res.ok)throw Error('network');const json=await res.json();if(json.code!==200)throw Error('api');currentAyahs=json.data.ayahs;document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';playSurahAudio(n);document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');localStorage.setItem('noor-last',String(n))}catch(e){document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}}
 function toggleFav(n){let f=getStore('noor-favs');f=f.includes(n)?f.filter(x=>x!==n):[...f,n];localStorage.setItem('noor-favs',JSON.stringify(f));renderSurahs();renderSaved()}
 function bookmarkAyah(s,a){let b=getStore('noor-bookmarks');if(!b.some(x=>x.s===s&&x.a===a))b.push({s,a});localStorage.setItem('noor-bookmarks',JSON.stringify(b));alert('تم حفظ الآية في هذا الجهاز')}
 function renderSaved(){let f=getStore('noor-favs'),b=getStore('noor-bookmarks');document.getElementById('favorites').innerHTML=f.length?f.map(n=>'<div class="surah"><span>'+n+' — '+names[n-1]+'</span><button onclick="loadSurah('+n+')">افتح</button></div>').join(''):'<p class="muted">لم تضف سورًا للمفضلة بعد.</p>';document.getElementById('bookmarks').innerHTML=b.length?b.map(x=>'<div class="surah"><span>'+names[x.s-1]+' — الآية '+x.a+'</span><button onclick="openBookmark('+x.s+','+x.a+')">افتح</button></div>').join(''):'<p class="muted">لا توجد آيات محفوظة بعد.</p>'}
@@ -48,5 +84,5 @@ function saveLast(){if(current)localStorage.setItem('noor-last',String(current))
 function openLast(){loadSurah(Number(localStorage.getItem('noor-last')||1))}
 async function shareAyah(s,a){const ay=currentAyahs.find(x=>x.numberInSurah===a);if(!ay)return;const t=ay.text+'\n— سورة '+names[s-1]+'، الآية '+a;try{if(navigator.share)await navigator.share({text:t});else if(navigator.clipboard){await navigator.clipboard.writeText(t);alert('تم نسخ الآية')}}catch(e){}}
 async function dailyAyah(){section('daily');const n=1+Math.floor(Math.random()*114);try{const r=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');const j=await r.json();const a=j.data.ayahs[Math.floor(Math.random()*j.data.ayahs.length)];document.getElementById('dailyContent').innerHTML='<div class="verse">'+a.text+'</div><p class="gold">سورة '+names[n-1]+' — الآية '+a.numberInSurah+'</p><button onclick="loadSurah('+n+')">اقرأ السورة</button>'}catch(e){document.getElementById('dailyContent').textContent='تعذر تحميل الآية الآن.'}}
-renderSurahs();if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+renderSurahs();setupAudio();loadVideos();if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 </script></body></html>
