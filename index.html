@@ -38,7 +38,7 @@
    <text x="300" y="30" fill="#173b39" font-size="15" text-anchor="middle">مشهد رمزي يوضح أحداث السورة</text>
   </svg>
  </div>
- <div class="story-caption"><strong id="storyVerse">﴿ أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ﴾</strong><p id="storyExplanation">يعرض المشهد بداية قصة أصحاب الفيل، كما وردت في السورة.</p><div class="actions"><button id="storyPlay" onclick="startFilStory()">▶ ابدأ المشاهد مع التلاوة</button><button class="secondary" onclick="stopFilStory()">إيقاف المشاهد</button></div><div class="story-note">المشهد رسم توضيحي مبسط وليس تصويرًا تاريخيًا حرفيًا. نص الآيات والتفسير يُعرضان باحترام ومن مصادر موثوقة.</div></div>
+ <div class="story-caption"><strong id="storyVerse">﴿ أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ﴾</strong><p id="storyExplanation">يعرض المشهد بداية قصة أصحاب الفيل، كما وردت في السورة.</p><div class="actions"><button id="storyPlay" onclick="startFilStory()">▶ ابدأ المشاهد مع التلاوة</button><button class="secondary" onclick="previousFilScene()">السابق</button><button class="secondary" onclick="nextFilScene()">التالي</button><button class="secondary" onclick="stopFilStory()">إيقاف</button></div><div class="story-note" id="storyProgress" aria-live="polite">المشهد 1 من 5</div><div class="story-note">المشهد رسم توضيحي مبسط وليس تصويرًا تاريخيًا حرفيًا. نص الآيات والتفسير يُعرضان باحترام ومن مصادر موثوقة.</div></div>
 </div>
 <div id="verses"></div>
 </section>
@@ -105,20 +105,23 @@ function updateFilStory(i){
  const a=currentAyahs[filStoryIndex];
  if(a)document.getElementById('storyVerse').textContent='﴿ '+a.text+' ﴾';
  document.getElementById('storyExplanation').textContent=filExplanations[filStoryIndex];
+ const progress=document.getElementById('storyProgress');
+ if(progress)progress.textContent='المشهد '+(filStoryIndex+1)+' من 5 — الآية '+(filStoryIndex+1);
 }
+function previousFilScene(){updateFilStory(filStoryIndex-1)}
+function nextFilScene(){updateFilStory(filStoryIndex+1)}
 function startFilStory(){
  const audio=document.getElementById('surahAudio');
- document.getElementById('storyPlay').textContent='▶ المشاهد تعمل مع التلاوة';
- if(audio.src){audio.play().catch(()=>{});}
+ document.getElementById('storyPlay').textContent='▶ المشاهد متزامنة مع التلاوة';
+ if(!audio.src){document.getElementById('audioStatus').textContent='جهّز التلاوة أولًا ثم ابدأ المشاهد.';return}
+ audio.play().catch(()=>{document.getElementById('audioStatus').textContent='اضغط تشغيل التلاوة من مشغل الصوت، ثم ابدأ المشاهد.'});
  if(filStoryTimer)clearInterval(filStoryTimer);
  filStoryTimer=setInterval(()=>{
   const duration=audio.duration;
-  if(duration&&isFinite(duration)&&duration>0&& !audio.paused){
+  if(duration&&isFinite(duration)&&duration>0&&!audio.paused){
    updateFilStory(Math.min(4,Math.floor((audio.currentTime/duration)*5)));
-  }else if(!audio.src||audio.paused){
-   updateFilStory((filStoryIndex+1)%5);
   }
- },1800);
+ },500);
 }
 function stopFilStory(){
  if(filStoryTimer)clearInterval(filStoryTimer);
