@@ -1,0 +1,12 @@
+{
+  "name": "نور | القرآن الكريم",
+  "short_name": "نور",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#071b19",
+  "theme_color": "#103c32",
+  "description": "رفيقك اليومي مع القرآن الكريم"
+}
