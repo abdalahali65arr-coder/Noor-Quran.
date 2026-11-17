@@ -134,8 +134,7 @@ function renderSaved(){let f=getStore('noor-favs'),b=getStore('noor-bookmarks');
 async function openBookmark(s,a){await loadSurah(s);setTimeout(()=>document.getElementById('ayah-'+a)?.scrollIntoView({behavior:'smooth',block:'center'}),500)}
 function saveLast(){if(current)localStorage.setItem('noor-last',String(current));alert('تم حفظ آخر سورة على هذا الجهاز')}
 function openLast(){loadSurah(Number(localStorage.getItem('noor-last')||1))}
-async function shareAyah(s,a){const ay=currentAyahs.find(x=>x.numberInSurah===a);if(!ay)return;const t=ay.text+'
-— سورة '+names[s-1]+'، الآية '+a;try{if(navigator.share)await navigator.share({text:t});else if(navigator.clipboard){await navigator.clipboard.writeText(t);alert('تم نسخ الآية')}}catch(e){}}
+async function shareAyah(s,a){const ay=currentAyahs.find(x=>x.numberInSurah===a);if(!ay)return;const t=ay.text+'\n— سورة '+names[s-1]+'، الآية '+a;try{if(navigator.share)await navigator.share({text:t});else if(navigator.clipboard){await navigator.clipboard.writeText(t);alert('تم نسخ الآية')}}catch(e){}}
 async function dailyAyah(){section('daily');const n=1+Math.floor(Math.random()*114);try{const r=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');const j=await r.json();const a=j.data.ayahs[Math.floor(Math.random()*j.data.ayahs.length)];document.getElementById('dailyContent').innerHTML='<div class="verse">'+a.text+'</div><p class="gold">سورة '+names[n-1]+' — الآية '+a.numberInSurah+'</p><button onclick="loadSurah('+n+')">اقرأ السورة</button>'}catch(e){document.getElementById('dailyContent').textContent='تعذر تحميل الآية الآن.'}}
 renderSurahs();setupAudio();loadVideos();if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 </script></body></html>
