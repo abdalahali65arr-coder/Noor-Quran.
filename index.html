@@ -7,7 +7,19 @@
 <title>نور | القرآن الكريم</title>
 <style>
 :root{--bg:#071b19;--panel:#12332e;--gold:#d9bb78;--muted:#b8cbc2;--line:#285448}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Tahoma,Arial,sans-serif;padding-bottom:84px}header{background:#103c32;padding:20px 16px 18px;border-radius:0 0 24px 24px}.logo{font-size:30px;color:var(--gold);font-weight:bold}header p{color:#d4e4dc;margin:7px 0 12px}.wrap{padding:14px;max-width:850px;margin:auto}.hero,.panel,.surah,.verse,.feature{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin:11px 0}.hero{background:linear-gradient(135deg,#185b49,#102b28);border-color:var(--gold)}h2{color:var(--gold);font-size:20px}button,input{font:inherit}button{border:0;border-radius:11px;padding:11px 13px;background:var(--gold);color:#142b23;font-weight:bold;cursor:pointer}button.secondary{background:#244b40;color:white;border:1px solid #527466}button:disabled{opacity:.5}input{width:100%;padding:13px;border:0;border-radius:11px;margin-top:8px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tabs button{flex:1;min-width:90px}.surah{display:flex;justify-content:space-between;align-items:center;gap:9px}.num{color:var(--gold);border:1px solid var(--gold);border-radius:9px;padding:6px 9px}.hidden{display:none!important}.muted,.status{color:var(--muted);font-size:14px;line-height:1.8}.verse{font-size:22px;line-height:2.1;text-align:justify}.verse small{display:block;color:var(--gold);font-size:13px}.verse-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.bottom{position:fixed;bottom:0;left:0;right:0;background:#10352e;display:flex;justify-content:space-around;padding:10px 3px;z-index:5}.bottom button{background:transparent;color:white;padding:8px;font-size:13px}.pill{display:inline-block;border:1px solid #527466;border-radius:30px;padding:5px 10px;color:var(--muted);font-size:12px}.feature{line-height:1.9}.gold{color:var(--gold)}.audio{width:100%;margin-top:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}@media(max-width:420px){.grid{grid-template-columns:1fr}.surah{align-items:flex-start}.surah .actions{margin:0}}
-.story-panel{background:#0b2426;border:1px solid #b99a58;border-radius:18px;padding:12px;margin:14px 0;overflow:hidden}.story-stage{position:relative;min-height:230px;border-radius:14px;overflow:hidden;background:linear-gradient(#78b9d0 0%,#d8c99b 68%,#8a7550 69%,#5a4936 100%)}.story-stage svg{display:block;width:100%;height:230px}.story-caption{padding:12px 5px 3px;line-height:1.9}.story-caption strong{color:var(--gold)}.story-caption p{margin:5px 0;color:#e7eee8}.story-note{font-size:12px;color:#b8cbc2}.story-bird{animation:birdfly 5s linear infinite}.story-bird:nth-of-type(2){animation-delay:-1.5s}.story-bird:nth-of-type(3){animation-delay:-3s}@keyframes birdfly{0%{transform:translate(-150px,35px)}50%{transform:translate(70px,-12px)}100%{transform:translate(310px,25px)}}.story-stone{animation:stonefall 2.4s ease-in infinite;transform-origin:center}.story-stone:nth-of-type(2){animation-delay:.7s}.story-stone:nth-of-type(3){animation-delay:1.4s}@keyframes stonefall{0%{transform:translateY(-35px);opacity:0}20%{opacity:1}100%{transform:translateY(105px);opacity:0}}</style>
+.story-panel{background:#0b2426;border:1px solid #b99a58;border-radius:18px;padding:12px;margin:14px 0;overflow:hidden}.story-stage{position:relative;min-height:230px;border-radius:14px;overflow:hidden;background:linear-gradient(#78b9d0 0%,#d8c99b 68%,#8a7550 69%,#5a4936 100%)}.story-stage svg{display:block;width:100%;height:230px}.story-caption{padding:12px 5px 3px;line-height:1.9}.story-caption strong{color:var(--gold)}.story-caption p{margin:5px 0;color:#e7eee8}.story-note{font-size:12px;color:#b8cbc2}.story-bird{animation:birdfly 5s linear infinite}.story-bird:nth-of-type(2){animation-delay:-1.5s}.story-bird:nth-of-type(3){animation-delay:-3s}@keyframes birdfly{0%{transform:translate(-150px,35px)}50%{transform:translate(70px,-12px)}100%{transform:translate(310px,25px)}}.story-stone{animation:stonefall 2.4s ease-in infinite;transform-origin:center}.story-stone:nth-of-type(2){animation-delay:.7s}.story-stone:nth-of-type(3){animation-delay:1.4s}@keyframes stonefall{0%{transform:translateY(-35px);opacity:0}20%{opacity:1}100%{transform:translateY(105px);opacity:0}}
+.story-stage{isolation:isolate;box-shadow:inset 0 0 35px #102d3040}
+.story-stage:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 20%,#fff2 48%,transparent 72%);transform:translateX(-120%);animation:storyLight 8s ease-in-out infinite}
+#filSceneArt{animation:sceneAppear .9s ease both}
+#filSceneArt>g:first-child{transform-box:fill-box;transform-origin:center;animation:sceneDrift 4.5s ease-in-out infinite alternate}
+#filSceneArt>g:nth-child(2){transform-box:fill-box;transform-origin:center;animation:sceneDrift 5.5s ease-in-out infinite alternate-reverse}
+.story-stage svg>circle{transform-box:fill-box;transform-origin:center;animation:sunPulse 5s ease-in-out infinite}
+@keyframes sceneAppear{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes sceneDrift{from{translate:-3px 0}to{translate:4px -3px}}
+@keyframes storyLight{0%,35%{transform:translateX(-120%)}70%,100%{transform:translateX(120%)}}
+@keyframes sunPulse{0%,100%{opacity:.72}50%{opacity:1;scale:1.08}}
+@media(prefers-reduced-motion:reduce){.story-stage:after,#filSceneArt,#filSceneArt>g,.story-stage svg>circle,.story-bird,.story-stone{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
 <header><div class="logo">☾ نور</div><p>رفيقك اليومي مع القرآن الكريم</p><input id="search" placeholder="ابحث عن سورة..." oninput="renderSurahs()" aria-label="البحث عن سورة"></header>
@@ -33,7 +45,7 @@
    <g id="filSceneArt"></g>
   </svg>
  </div>
- <div class="story-caption"><strong id="storyVerse">﴿ أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ﴾</strong><p id="storyExplanation">يعرض المشهد بداية قصة أصحاب الفيل، كما وردت في السورة.</p><div class="actions"><button id="storyPlay" onclick="startFilStory()">▶ ابدأ المشاهد مع التلاوة</button><button class="secondary" onclick="previousFilScene()">السابق</button><button class="secondary" onclick="nextFilScene()">التالي</button><button class="secondary" onclick="stopFilStory()">إيقاف</button></div><div class="story-note" id="storyProgress" aria-live="polite">المشهد 1 من 5</div><div class="story-note">المشهد رسم توضيحي مبسط وليس تصويرًا تاريخيًا حرفيًا. نص الآيات والتفسير يُعرضان باحترام ومن مصادر موثوقة.</div></div>
+ <div class="story-caption"><strong id="storyVerse">﴿ أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ﴾</strong><p id="storyExplanation">يعرض المشهد بداية قصة أصحاب الفيل، كما وردت في السورة.</p><div class="actions"><button id="storyPlay" onclick="startFilStory()">▶ ابدأ المشاهد مع التلاوة</button><button class="secondary" onclick="previousFilScene()">السابق</button><button class="secondary" onclick="nextFilScene()">التالي</button><button class="secondary" onclick="stopFilStory()">إيقاف</button></div><div class="story-note" id="storyProgress" aria-live="polite">المشهد 1 من 5</div><div class="story-note">المشاهد تتبدل تلقائيًا، ويمكنك التنقل بينها يدويًا. الرسم توضيحي مبسط وليس تصويرًا تاريخيًا حرفيًا. نص الآيات والتفسير يُعرضان باحترام ومن مصادر موثوقة.</div></div>
 </div>
 <div id="verses"></div>
 </section>
@@ -104,7 +116,12 @@ const filSceneArt=[
 ];
 function renderFilVisual(i){
  const art=document.getElementById('filSceneArt');
- if(art)art.innerHTML=filSceneArt[i];
+ if(art){
+  art.style.animation='none';
+  art.innerHTML=filSceneArt[i];
+  void art.getBoundingClientRect();
+  art.style.animation='';
+ }
 }
 function updateFilStory(i){
  filStoryIndex=Math.max(0,Math.min(4,i));
@@ -146,6 +163,7 @@ function stopFilStory(){
  const audio=document.getElementById('surahAudio');
  if(audio){
   audio.removeEventListener('timeupdate',syncFilSceneToAudio);
+  audio.removeEventListener('seeked',syncFilSceneToAudio);
   audio.removeEventListener('seeked',syncFilSceneToAudio);
  }
  if(filStoryTimer)clearInterval(filStoryTimer);
