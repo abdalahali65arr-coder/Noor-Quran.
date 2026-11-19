@@ -22,9 +22,9 @@
 </style>
 </head>
 <body>
-<header><div class="logo">☾ نور</div><p>رفيقك اليومي مع القرآن الكريم</p><input id="search" placeholder="ابحث عن سورة..." oninput="renderSurahs()" aria-label="البحث عن سورة"></header>
+<header><div class="logo">☾ نور</div><p>رفيقك اليومي مع القرآن الكريم</p><div class="pill" id="connectionStatus" role="status">جارٍ فحص الاتصال…</div><input id="search" placeholder="ابحث عن سورة..." oninput="renderSurahs()" aria-label="البحث عن سورة"></header>
 <main class="wrap">
-<div class="hero"><span class="pill">القرآن الكريم</span><h1>السلام عليكم 🌙</h1><p>اجعل للقرآن نصيبًا من يومك</p><h2>﴿ وَهَٰذَا كِتَابٌ أَنزَلْنَاهُ مُبَارَكٌ ﴾</h2><div class="actions"><button onclick="openLast()">متابعة آخر قراءة</button><button class="secondary" onclick="dailyAyah()">آية اليوم</button></div></div>
+<div class="hero"><span class="pill">القرآن الكريم</span><h1>السلام عليكم 🌙</h1><p>اجعل للقرآن نصيبًا من يومك</p><h2>﴿ وَهَٰذَا كِتَابٌ أَنزَلْنَاهُ مُبَارَكٌ ﴾</h2><div class="actions"><button onclick="openLast()">متابعة آخر قراءة</button><button class="secondary" onclick="dailyAyah()">آية اليوم</button></div><div class="actions"><button class="secondary" id="installAppBtn" onclick="installNoor()">⬇ تثبيت تطبيق نور</button></div></div>
 <div class="grid">
 <div class="feature"><span class="gold">📖 القراءة</span><div class="muted">تصفح سور القرآن الكريم واقرأ الآيات بالرسم العثماني.</div></div>
 <div class="feature"><span class="gold">⭐ محفوظاتك</span><div class="muted">احتفظ بالسور والآيات التي تريد الرجوع إليها.</div></div>
@@ -164,7 +164,6 @@ function stopFilStory(){
  if(audio){
   audio.removeEventListener('timeupdate',syncFilSceneToAudio);
   audio.removeEventListener('seeked',syncFilSceneToAudio);
-  audio.removeEventListener('seeked',syncFilSceneToAudio);
  }
  if(filStoryTimer)clearInterval(filStoryTimer);
  if(filAutoTimer)clearInterval(filAutoTimer);
@@ -173,7 +172,38 @@ function stopFilStory(){
 }
 
 function renderSurahs(){const q=document.getElementById('search').value.trim();document.getElementById('surahs').innerHTML=names.map((n,i)=>({n,i})).filter(x=>x.n.includes(q)).map(x=>'<div class="surah"><span><span class="num">'+(x.i+1)+'</span>　'+x.n+'</span><span class="actions"><button onclick="loadSurah('+(x.i+1)+')">اقرأ</button><button class="secondary" aria-label="إضافة للمفضلة" onclick="toggleFav('+(x.i+1)+')">☆</button></span></div>').join('')||'<p class="muted">لا توجد نتائج</p>'}
-async function loadSurah(n){current=n;section('reader');const story=document.getElementById('storyPanel');story.classList.toggle('hidden',n!==105);if(n===105){story.classList.remove('hidden');updateFilStory(0);startAutoFilScenes()}stopFilStory();if(n===105){updateFilStory(0);startAutoFilScenes()}document.getElementById('surahTitle').textContent='سورة '+names[n-1];document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';document.getElementById('verses').innerHTML='';try{const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');if(!res.ok)throw Error('network');const json=await res.json();if(json.code!==200)throw Error('api');currentAyahs=json.data.ayahs;if(n===105){updateFilStory(0);startAutoFilScenes();}document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';playSurahAudio(n);document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');localStorage.setItem('noor-last',String(n))}catch(e){document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.'}}
+let surahLoadToken=0;
+async function loadSurah(n){
+ const token=++surahLoadToken;
+ stopFilStory();
+ const audio=document.getElementById('surahAudio');
+ if(audio){audio.pause();audio.removeAttribute('src');audio.load();}
+ current=n;currentAyahs=[];
+ section('reader');
+ const story=document.getElementById('storyPanel');
+ story.classList.toggle('hidden',n!==105);
+ document.getElementById('surahTitle').textContent='سورة '+names[n-1];
+ document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';
+ document.getElementById('verses').innerHTML='<p class="muted">لحظات ونجهز لك السورة…</p>';
+ if(n===105)updateFilStory(0);
+ try{
+  const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');
+  if(!res.ok)throw Error('network');
+  const json=await res.json();
+  if(json.code!==200||!json.data||!Array.isArray(json.data.ayahs))throw Error('api');
+  if(token!==surahLoadToken)return;
+  currentAyahs=json.data.ayahs;
+  document.getElementById('readerStatus').textContent='نص القرآن الكريم — رواية حفص عن عاصم';
+  playSurahAudio(n);
+  document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');
+  localStorage.setItem('noor-last',String(n));
+  if(n===105){updateFilStory(0);startAutoFilScenes();}
+ }catch(e){
+  if(token!==surahLoadToken)return;
+  document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تأكد من الإنترنت ثم حاول مرة أخرى.';
+  document.getElementById('verses').innerHTML='<button onclick="loadSurah('+n+')">إعادة المحاولة</button>';
+ }
+}
 function toggleFav(n){let f=getStore('noor-favs');f=f.includes(n)?f.filter(x=>x!==n):[...f,n];localStorage.setItem('noor-favs',JSON.stringify(f));renderSurahs();renderSaved()}
 function bookmarkAyah(s,a){let b=getStore('noor-bookmarks');if(!b.some(x=>x.s===s&&x.a===a))b.push({s,a});localStorage.setItem('noor-bookmarks',JSON.stringify(b));alert('تم حفظ الآية في هذا الجهاز')}
 function renderSaved(){let f=getStore('noor-favs'),b=getStore('noor-bookmarks');document.getElementById('favorites').innerHTML=f.length?f.map(n=>'<div class="surah"><span>'+n+' — '+names[n-1]+'</span><button onclick="loadSurah('+n+')">افتح</button></div>').join(''):'<p class="muted">لم تضف سورًا للمفضلة بعد.</p>';document.getElementById('bookmarks').innerHTML=b.length?b.map(x=>'<div class="surah"><span>'+names[x.s-1]+' — الآية '+x.a+'</span><button onclick="openBookmark('+x.s+','+x.a+')">افتح</button></div>').join(''):'<p class="muted">لا توجد آيات محفوظة بعد.</p>'}
@@ -182,5 +212,30 @@ function saveLast(){if(current)localStorage.setItem('noor-last',String(current))
 function openLast(){loadSurah(Number(localStorage.getItem('noor-last')||1))}
 async function shareAyah(s,a){const ay=currentAyahs.find(x=>x.numberInSurah===a);if(!ay)return;const t=ay.text+'\n— سورة '+names[s-1]+'، الآية '+a;try{if(navigator.share)await navigator.share({text:t});else if(navigator.clipboard){await navigator.clipboard.writeText(t);alert('تم نسخ الآية')}}catch(e){}}
 async function dailyAyah(){section('daily');const n=1+Math.floor(Math.random()*114);try{const r=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');const j=await r.json();const a=j.data.ayahs[Math.floor(Math.random()*j.data.ayahs.length)];document.getElementById('dailyContent').innerHTML='<div class="verse">'+a.text+'</div><p class="gold">سورة '+names[n-1]+' — الآية '+a.numberInSurah+'</p><button onclick="loadSurah('+n+')">اقرأ السورة</button>'}catch(e){document.getElementById('dailyContent').textContent='تعذر تحميل الآية الآن.'}}
-renderSurahs();setupAudio();loadVideos();if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+let deferredInstallPrompt=null;
+function updateConnectionStatus(){
+ const el=document.getElementById('connectionStatus');
+ if(!el)return;
+ el.textContent=navigator.onLine?'متصل بالإنترنت':'غير متصل — بعض الخدمات تحتاج إنترنت';
+ el.style.borderColor=navigator.onLine?'#527466':'#c78b65';
+}
+window.addEventListener('online',updateConnectionStatus);
+window.addEventListener('offline',updateConnectionStatus);
+window.addEventListener('beforeinstallprompt',event=>{
+ event.preventDefault();deferredInstallPrompt=event;
+ const btn=document.getElementById('installAppBtn');if(btn)btn.classList.remove('hidden');
+});
+async function installNoor(){
+ if(!deferredInstallPrompt){alert('لو خيار التثبيت غير ظاهر، افتح قائمة Chrome ثم اختر إضافة إلى الشاشة الرئيسية.');return;}
+ deferredInstallPrompt.prompt();
+ await deferredInstallPrompt.userChoice;
+ deferredInstallPrompt=null;
+ const btn=document.getElementById('installAppBtn');if(btn)btn.classList.add('hidden');
+}
+window.addEventListener('appinstalled',()=>{
+ const btn=document.getElementById('installAppBtn');if(btn)btn.classList.add('hidden');
+});
+updateConnectionStatus();
+renderSurahs();setupAudio();loadVideos();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 </script></body></html>
