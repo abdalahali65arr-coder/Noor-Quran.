@@ -45,7 +45,7 @@
    <g id="filSceneArt"></g>
   </svg>
  </div>
- <div class="story-caption"><strong id="storyVerse">﴿ أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ﴾</strong><p id="storyExplanation">يعرض المشهد بداية قصة أصحاب الفيل، كما وردت في السورة.</p><div class="actions"><button id="storyPlay" onclick="startFilStory()">▶ ابدأ المشاهد مع التلاوة</button><button class="secondary" onclick="previousFilScene()">السابق</button><button class="secondary" onclick="nextFilScene()">التالي</button><button class="secondary" onclick="stopFilStory()">إيقاف</button></div><div class="story-note" id="storyProgress" aria-live="polite">المشهد 1 من 5</div><div class="story-note">المشاهد تتبدل تلقائيًا، ويمكنك التنقل بينها يدويًا. الرسم توضيحي مبسط وليس تصويرًا تاريخيًا حرفيًا. نص الآيات والتفسير يُعرضان باحترام ومن مصادر موثوقة.</div></div>
+ <div class="story-caption"><strong id="storyVerse">﴿ أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ﴾</strong><p id="storyExplanation">مشاهد رمزية متحركة ترافق قراءة السورة.</p><div class="actions"><button id="storyPlay" onclick="startFilStory()">▶ ابدأ المشاهد مع التلاوة</button><button class="secondary" onclick="previousFilScene()">السابق</button><button class="secondary" onclick="nextFilScene()">التالي</button><button class="secondary" onclick="stopFilStory()">إيقاف</button></div><div class="story-note" id="storyProgress" aria-live="polite">المشهد 1 من 5</div><div class="story-note">المشاهد الرمزية تتبدل تلقائيًا مع السورة، ويمكنك التنقل بينها يدويًا. الصور خلفيات للتأمل وليست تفسيرًا للآيات أو تصويرًا لأحداثها.</div></div>
 </div>
 <div id="verses"></div>
 </section>
@@ -100,19 +100,19 @@ async function loadVideos(){
 }
 
 const filExplanations=[
-"تبدأ السورة بتذكير النبي ﷺ بما صنعه الله بأصحاب الفيل الذين قصدوا البيت الحرام.",
-"جعل الله تدبيرهم في ضلال وخسران، فلم يحققوا ما أرادوا.",
-"أرسل الله عليهم جماعات من طير تأتي متتابعة.",
-"كانت الطير ترميهم بحجارة من طين متحجر، كما أخبر القرآن.",
-"فصاروا كزرع يابس مهشم أكلته الدواب؛ وفي ذلك بيان قدرة الله وحفظه لبيته."
+"مشهد رمزي للتأمل في معاني السورة، وليس تفسيرًا مستقلًا للآيات.",
+"تتغير الصورة لتمنح القارئ لحظة تأمل أثناء الاستماع.",
+"يمكنك متابعة الآيات وقراءة نص السورة بالتزامن مع المشهد.",
+"هذه خلفية بصرية رمزية، ولا تصف حدثًا تاريخيًا أو غيبيًا.",
+"اختم المشاهدة بالرجوع إلى كتب التفسير المعتمدة لفهم المعنى."
 ];
 let filStoryTimer=null,filAutoTimer=null,filStoryIndex=0;
 const filSceneArt=[
- '<g fill="#62594b" stroke="#403a32" stroke-width="3"><path d="M95 192 L90 140 Q95 105 132 105 Q169 108 174 145 L166 192Z"/><path d="M155 128 Q190 102 205 127 L194 147 L166 146Z"/><path d="M194 130 L216 134 L209 142 L194 140Z"/><path d="M110 190v30 M151 190v30" stroke-width="7" fill="none"/><path d="M250 194 L245 155 Q250 126 282 126 Q313 128 318 158 L310 194Z"/><path d="M302 145 Q326 126 340 146 L329 162 L310 160Z"/></g><g fill="#8b795c"><path d="M30 210h540v9H30z"/><path d="M45 210l8-38 8 38M390 210l8-38 8 38"/></g><text x="300" y="32" text-anchor="middle" fill="#173b39" font-size="17">جيش أصحاب الفيل يتجه نحو مكة</text>',
- '<g fill="#62594b" stroke="#403a32" stroke-width="3"><path d="M105 192 L100 145 Q105 112 140 112 Q175 114 180 148 L173 192Z"/><path d="M164 133 Q197 110 211 132 L200 151 L176 150Z"/><path d="M255 194 L250 155 Q255 126 286 126 Q317 128 322 158 L314 194Z"/></g><g stroke="#e8dfc7" stroke-width="5" fill="none" stroke-linecap="round"><path d="M65 80q25-25 50 0M510 78q-25-25-50 0"/></g><path d="M35 225q110-25 220 0t220 0" fill="none" stroke="#806a4a" stroke-width="9"/><text x="300" y="32" text-anchor="middle" fill="#173b39" font-size="17">خاب تدبيرهم وردّ الله كيدهم</text>',
- '<g fill="#243c3a" stroke="#182e2c" stroke-width="2"><path d="M80 88q18-24 36 0 18-24 36 0-18-8-36 12-18-20-36-12z"/><path d="M205 58q18-24 36 0 18-24 36 0-18-8-36 12-18-20-36-12z"/><path d="M350 82q18-24 36 0 18-24 36 0-18-8-36 12-18-20-36-12z"/><path d="M455 48q18-24 36 0 18-24 36 0-18-8-36 12-18-20-36-12z"/></g><path d="M0 210q130-30 260 0t340 0v50H0z" fill="#806a4a"/><text x="300" y="32" text-anchor="middle" fill="#173b39" font-size="17">وأرسل عليهم طيرًا أبابيل</text>',
- '<g fill="#243c3a"><path d="M90 70q18-24 36 0 18-24 36 0-18-8-36 12-18-20-36-12z"/><path d="M245 52q18-24 36 0 18-24 36 0-18-8-36 12-18-20-36-12z"/><path d="M405 75q18-24 36 0 18-24 36 0-18-8-36 12-18-20-36-12z"/></g><g fill="#b69b70" stroke="#69573d" stroke-width="2"><path class="story-stone" d="M150 95l8 5-5 13-8-5z"/><path class="story-stone" d="M300 82l8 5-5 13-8-5z"/><path class="story-stone" d="M450 100l8 5-5 13-8-5z"/></g><path d="M0 215q130-28 260 0t340 0v45H0z" fill="#806a4a"/><text x="300" y="32" text-anchor="middle" fill="#173b39" font-size="17">ترميهم بحجارة من سجيل</text>',
- '<g fill="#62594b" opacity=".72"><path d="M85 205l8-45 18 10 12-28 18 32 15-12 18 43z"/><path d="M245 210l12-55 22 18 15-32 20 34 20-12 18 47z"/><path d="M410 207l10-42 18 13 13-27 20 30 16-10 18 36z"/></g><g fill="#9a896c"><path d="M30 222h540v7H30z"/><path d="M65 236l22-7 15 8 20-6 14 9H65zM340 238l20-8 18 8 16-7 17 9z"/></g><text x="300" y="32" text-anchor="middle" fill="#173b39" font-size="17">فجعلهم كعصف مأكول</text>'
+ '<g><circle cx="480" cy="55" r="30" fill="#fff1bf"/><path d="M0 190L110 105 205 190 320 90 470 190 560 125 600 190Z" fill="#587b70"/><path d="M0 215Q150 185 300 215T600 210V260H0Z" fill="#35594c"/><path d="M0 235Q150 215 300 238T600 230V260H0Z" fill="#203f38"/></g><text x="300" y="35" text-anchor="middle" fill="#173b39" font-size="17">آفاق للتأمل والتدبر</text>',
+ '<g fill="#f6e6b8"><circle cx="95" cy="70" r="3"/><circle cx="170" cy="42" r="2"/><circle cx="275" cy="76" r="3"/><circle cx="390" cy="38" r="2"/><circle cx="510" cy="78" r="3"/></g><path d="M0 200Q130 175 260 205T600 195V260H0Z" fill="#536e68"/><path d="M0 225Q150 205 300 230T600 220V260H0Z" fill="#294b43"/><path d="M280 190Q300 130 320 190" fill="none" stroke="#d9bb78" stroke-width="4"/><text x="300" y="35" text-anchor="middle" fill="#173b39" font-size="17">سكينة الليل واتساع السماء</text>',
+ '<g><circle cx="300" cy="105" r="48" fill="#f5d99b" opacity=".9"/><path d="M0 205Q110 160 220 205T440 200T600 195V260H0Z" fill="#9b835c"/><path d="M0 230Q150 205 300 235T600 225V260H0Z" fill="#66553e"/><path d="M60 195q20-45 40 0m-8 0q20-55 40 0" stroke="#466b50" stroke-width="7" fill="none"/></g><text x="300" y="35" text-anchor="middle" fill="#173b39" font-size="17">تأمل في الأرض وآيات الخلق</text>',
+ '<g><path d="M0 180Q100 130 200 180T400 180T600 175V260H0Z" fill="#477d82"/><path d="M0 205Q100 175 200 205T400 205T600 200" fill="none" stroke="#c5e0d6" stroke-width="5"/><path d="M0 230Q100 200 200 230T400 230T600 225" fill="none" stroke="#c5e0d6" stroke-width="4"/><circle cx="500" cy="65" r="25" fill="#fff0bd"/></g><text x="300" y="35" text-anchor="middle" fill="#173b39" font-size="17">جمال واتساع مشاهد الكون</text>',
+ '<g><path d="M0 210L120 110 205 195 330 85 455 200 535 125 600 190V260H0Z" fill="#71877a"/><path d="M0 225L120 145 205 215 330 120 455 220 535 160 600 215V260H0Z" fill="#3d6254"/><path d="M285 260V195q15-25 30 0v65" fill="#d9bb78"/><circle cx="300" cy="165" r="14" fill="#f5d99b"/></g><text x="300" y="35" text-anchor="middle" fill="#173b39" font-size="17">وقفة هادئة مع آيات السورة</text>'
 ];
 function renderFilVisual(i){
  const art=document.getElementById('filSceneArt');
@@ -126,11 +126,11 @@ function renderFilVisual(i){
 function updateFilStory(i){
  filStoryIndex=Math.max(0,Math.min(4,i));
  renderFilVisual(filStoryIndex);
- const a=currentAyahs[filStoryIndex];
+ const ayahIndex=currentAyahs.length?Math.min(currentAyahs.length-1,Math.floor((filStoryIndex/5)*currentAyahs.length)):0;\n const a=currentAyahs[ayahIndex];
  if(a)document.getElementById('storyVerse').textContent='﴿ '+a.text+' ﴾';
  document.getElementById('storyExplanation').textContent=filExplanations[filStoryIndex];
  const progress=document.getElementById('storyProgress');
- if(progress)progress.textContent='المشهد '+(filStoryIndex+1)+' من 5 — الآية '+(filStoryIndex+1);
+ if(progress)progress.textContent='المشهد '+(filStoryIndex+1)+' من 5 — الآية '+(ayahIndex+1);
 }
 function startAutoFilScenes(){
  if(filAutoTimer)clearInterval(filAutoTimer);
@@ -142,7 +142,7 @@ function previousFilScene(){updateFilStory(filStoryIndex-1)}
 function nextFilScene(){updateFilStory(filStoryIndex+1)}
 function syncFilSceneToAudio(){
  const audio=document.getElementById('surahAudio');
- if(current!==105||!audio||!isFinite(audio.duration)||audio.duration<=0)return;
+ if(!audio||!isFinite(audio.duration)||audio.duration<=0)return;
  const i=Math.min(4,Math.floor((audio.currentTime/audio.duration)*5));
  if(i!==filStoryIndex)updateFilStory(i);
 }
@@ -181,11 +181,11 @@ async function loadSurah(n){
  current=n;currentAyahs=[];
  section('reader');
  const story=document.getElementById('storyPanel');
- story.classList.toggle('hidden',n!==105);
+ story.classList.remove('hidden');
  document.getElementById('surahTitle').textContent='سورة '+names[n-1];
  document.getElementById('readerStatus').textContent='جارٍ تحميل نص الآيات...';
  document.getElementById('verses').innerHTML='<p class="muted">لحظات ونجهز لك السورة…</p>';
- if(n===105)updateFilStory(0);
+ updateFilStory(0);
  try{
   const res=await fetch('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');
   if(!res.ok)throw Error('network');
@@ -197,7 +197,7 @@ async function loadSurah(n){
   playSurahAudio(n);
   document.getElementById('verses').innerHTML=currentAyahs.map(a=>'<article class="verse" id="ayah-'+a.numberInSurah+'">'+a.text+' <small>﴿ '+a.numberInSurah+' ﴾</small><div class="verse-tools"><button class="secondary" onclick="bookmarkAyah('+n+','+a.numberInSurah+')">☆ حفظ الآية</button><button class="secondary" onclick="shareAyah('+n+','+a.numberInSurah+')">مشاركة</button></div></article>').join('');
   localStorage.setItem('noor-last',String(n));
-  if(n===105){updateFilStory(0);startAutoFilScenes();}
+  updateFilStory(0);startAutoFilScenes();
  }catch(e){
   if(token!==surahLoadToken)return;
   document.getElementById('readerStatus').textContent='تعذر تحميل الآيات الآن. تأكد من الإنترنت ثم حاول مرة أخرى.';
