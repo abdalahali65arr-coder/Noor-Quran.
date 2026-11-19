@@ -126,7 +126,8 @@ function renderFilVisual(i){
 function updateFilStory(i){
  filStoryIndex=Math.max(0,Math.min(4,i));
  renderFilVisual(filStoryIndex);
- const ayahIndex=currentAyahs.length?Math.min(currentAyahs.length-1,Math.floor((filStoryIndex/5)*currentAyahs.length)):0;\n const a=currentAyahs[ayahIndex];
+ const ayahIndex=currentAyahs.length?Math.min(currentAyahs.length-1,Math.floor((filStoryIndex/5)*currentAyahs.length)):0;
+ const a=currentAyahs[ayahIndex];
  if(a)document.getElementById('storyVerse').textContent='﴿ '+a.text+' ﴾';
  document.getElementById('storyExplanation').textContent=filExplanations[filStoryIndex];
  const progress=document.getElementById('storyProgress');
